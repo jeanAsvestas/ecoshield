@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: process.env.DARK_MODE ? process.env.DARK_MODE : 'class',
+  darkMode: process.env.DARK_MODE ?? 'class',
   content: [
     './app/**/*.{html,js,jsx,ts,tsx,mdx}',
     './components/**/*.{html,js,jsx,ts,tsx,mdx}',
@@ -175,13 +175,13 @@ module.exports = {
         },
       },
       fontFamily: {
-        heading: undefined,
-        body: undefined,
-        mono: undefined,
-        jakarta: ['var(--font-plus-jakarta-sans)'],
-        roboto: ['var(--font-roboto)'],
-        code: ['var(--font-source-code-pro)'],
-        inter: ['var(--font-inter)'],
+        'heading': undefined,
+        'body': undefined,
+        'mono': undefined,
+        'jakarta': ['var(--font-plus-jakarta-sans)'],
+        'roboto': ['var(--font-roboto)'],
+        'code': ['var(--font-source-code-pro)'],
+        'inter': ['var(--font-inter)'],
         'space-mono': ['var(--font-space-mono)'],
       },
       fontWeight: {

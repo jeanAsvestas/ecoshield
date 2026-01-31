@@ -1,190 +1,170 @@
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import React, { useCallback, useRef } from 'react';
 import {
+  Animated,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import {
+  AgendaList,
   CalendarProvider,
-  DateData,
   ExpandableCalendar,
+  WeekCalendar,
 } from 'react-native-calendars';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+// import testIDs from '../testIDs';
+// import type XDate from 'xdate';
+import AgendaItem from '@/components/agenda';
+import {
+  agendaItems,
+  getMarkedDates,
+  getTheme,
+  lightThemeColor,
+  themeColor,
+} from '@/utils/agenda-items';
 
-const { width } = Dimensions.get('window');
+// const leftArrowIcon = require('../img/previous.png');
+// const rightArrowIcon = require('../img/next.png');
+const ITEMS: any[] = agendaItems;
 
-// Height constants
-const WEEK_HEIGHT: number = 120;
-const MONTH_HEIGHT: number = 350;
-
-interface ExpandableCalendarCompProps {
-  onDateSelect?: (date: string) => void;
+interface Props {
+  weekView?: boolean;
 }
+// const CHEVRON = require('../img/next.png');
 
-interface GestureContext {
-  startHeight: number;
-}
-
-const ExpandableCalendarComp: React.FC<ExpandableCalendarCompProps> = ({
-  onDateSelect,
-}) => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toISOString().split('T')[0]
-  );
-
-  // Animated value for calendar height
-  const height = useSharedValue<number>(WEEK_HEIGHT);
-
-  const toggleExpanded = (): void => {
-    setIsExpanded(!isExpanded);
-    height.value = withSpring(isExpanded ? WEEK_HEIGHT : MONTH_HEIGHT, {
-      damping: 20,
-      stiffness: 90,
-    });
-  };
-
-  const panGesture = Gesture.Pan()
-    .onStart(() => {
-      'worklet';
-    })
-    .onUpdate((event) => {
-      'worklet';
-      const context = event as unknown as { startHeight?: number };
-
-      if (context.startHeight === undefined) {
-        context.startHeight = height.value;
-      }
-
-      // Calculate new height based on drag
-      const newHeight = context.startHeight + event.translationY;
-
-      // Clamp between week and month height
-      if (newHeight >= WEEK_HEIGHT && newHeight <= MONTH_HEIGHT) {
-        height.value = newHeight;
-      }
-    })
-    .onEnd((event) => {
-      'worklet';
-      // Determine if we should expand or collapse based on velocity and position
-      const threshold = (WEEK_HEIGHT + MONTH_HEIGHT) / 2;
-      const shouldExpand = height.value > threshold || event.velocityY > 500;
-
-      height.value = withSpring(shouldExpand ? MONTH_HEIGHT : WEEK_HEIGHT, {
-        damping: 20,
-        stiffness: 90,
-      });
-
-      runOnJS(setIsExpanded)(shouldExpand);
-    });
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      height: height.value,
-    };
+const ExpandableCalendarScreen = (props: Props) => {
+  const { weekView } = props;
+  const marked = useRef(getMarkedDates());
+  const theme = useRef(getTheme());
+  const todayBtnTheme = useRef({
+    todayButtonTextColor: themeColor,
   });
 
-  const handleDayPress = (day: DateData): void => {
-    setSelectedDate(day.dateString);
-    onDateSelect?.(day.dateString);
-  };
+  // const onDateChanged = useCallback((date, updateSource) => {
+  //   console.log('ExpandableCalendarScreen onDateChanged: ', date, updateSource);
+  // }, []);
 
-  // Get current week dates for week view
-  const getCurrentWeekDates = (): string[] => {
-    const current: Date = new Date(selectedDate);
-    const week: string[] = [];
+  // const onMonthChange = useCallback(({dateString}) => {
+  //   console.log('ExpandableCalendarScreen onMonthChange: ', dateString);
+  // }, []);
 
-    // Get Sunday of current week
-    const first: number = current.getDate() - current.getDay();
+  const renderItem = useCallback(({ item }: any) => {
+    return <AgendaItem item={item} />;
+  }, []);
 
-    for (let i = 0; i < 7; i++) {
-      const date: Date = new Date(current);
-      date.setDate(first + i);
-      week.push(date.toISOString().split('T')[0]);
-    }
+  const calendarRef = useRef<{ toggleCalendarPosition: () => boolean }>(null);
+  const rotation = useRef(new Animated.Value(0));
 
-    return week;
-  };
+  const toggleCalendarExpansion = useCallback(() => {
+    const isOpen = calendarRef.current?.toggleCalendarPosition();
+    Animated.timing(rotation.current, {
+      toValue: isOpen ? 1 : 0,
+      duration: 200,
+      useNativeDriver: true,
+      easing: Easing.out(Easing.ease),
+    }).start();
+  }, []);
 
-  const weekDates: string[] = getCurrentWeekDates();
-  const markedDates: {
-    [key: string]: {
-      selected: boolean;
-      selectedColor: string;
-      selectedTextColor: string;
-    };
-  } = {
-    [selectedDate]: {
-      selected: true,
-      selectedColor: '#2196F3',
-      selectedTextColor: '#FFFFFF',
+  const renderHeader = useCallback(
+    (date?: any) => {
+      const rotationInDegrees = rotation.current.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '-180deg'],
+      });
+      return (
+        <TouchableOpacity
+          style={styles.header}
+          onPress={toggleCalendarExpansion}
+        >
+          <Text style={styles.headerTitle}>{date?.toString('MMMM yyyy')}</Text>
+          <Animated.Image
+            // source={CHEVRON}
+            style={{
+              transform: [{ rotate: '90deg' }, { rotate: rotationInDegrees }],
+            }}
+          />
+        </TouchableOpacity>
+      );
     },
-  };
+    [toggleCalendarExpansion]
+  );
+
+  const onCalendarToggled = useCallback(
+    (isOpen: boolean) => {
+      rotation.current.setValue(isOpen ? 1 : 0);
+    },
+    [rotation]
+  );
 
   return (
-    <View style={styles.container}>
-      <GestureDetector gesture={panGesture}>
-        <Animated.View style={[styles.calendarContainer, animatedStyle]}>
-          <CalendarProvider date={selectedDate}>
-            <ExpandableCalendar
-              //   initialPosition={'open'}
-              current={selectedDate}
-              onDayPress={handleDayPress}
-              markedDates={markedDates}
-              theme={{
-                todayTextColor: '#2196F3',
-                selectedDayBackgroundColor: '#2196F3',
-                selectedDayTextColor: '#FFFFFF',
-                arrowColor: '#2196F3',
-                monthTextColor: '#333',
-                textMonthFontWeight: 'bold',
-                textDayFontSize: 16,
-                textMonthFontSize: 18,
-                textDayHeaderFontSize: 14,
-              }}
-              style={styles.calendar}
-              hideExtraDays={!isExpanded}
-            />
-          </CalendarProvider>
-        </Animated.View>
-      </GestureDetector>
-    </View>
+    <CalendarProvider
+      date={ITEMS[1]?.title}
+      // onDateChanged={onDateChanged}
+      // onMonthChange={onMonthChange}
+      showTodayButton
+      // disabledOpacity={0.6}
+      theme={todayBtnTheme.current}
+      // todayBottomMargin={16}
+      // disableAutoDaySelection={[ExpandableCalendar.navigationTypes.MONTH_SCROLL, ExpandableCalendar.navigationTypes.MONTH_ARROWS]}
+    >
+      {weekView ? (
+        <WeekCalendar
+          // testID={testIDs.weekCalendar.CONTAINER}
+          firstDay={1}
+          markedDates={marked.current}
+        />
+      ) : (
+        <ExpandableCalendar
+          // testID={testIDs.expandableCalendar.CONTAINER}
+          renderHeader={renderHeader}
+          ref={calendarRef}
+          onCalendarToggled={onCalendarToggled}
+          // horizontal={false}
+          // hideArrows
+          // disablePan
+          // hideKnob
+          // initialPosition={ExpandableCalendar.positions.OPEN}
+          // calendarStyle={styles.calendar}
+          // headerStyle={styles.header} // for horizontal only
+          // disableWeekScroll
+          theme={theme.current}
+          // disableAllTouchEventsForDisabledDays
+          firstDay={1}
+          markedDates={marked.current}
+          // leftArrowImageSource={leftArrowIcon}
+          // rightArrowImageSource={rightArrowIcon}
+          // animateScroll
+          // closeOnDayPress={false}
+        />
+      )}
+      <AgendaList
+        sections={ITEMS}
+        renderItem={renderItem}
+        // scrollToNextEvent
+        sectionStyle={styles.section}
+        // dayFormat={'yyyy-MM-d'}
+      />
+    </CalendarProvider>
   );
 };
 
+export default ExpandableCalendarScreen;
+
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFFFFF',
-  },
-  calendarContainer: {
-    width: width,
-    overflow: 'hidden',
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
   calendar: {
-    width: width,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
-  dragIndicatorContainer: {
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 10,
-    backgroundColor: '#F5F5F5',
+    marginVertical: 10,
   },
-  dragIndicator: {
-    width: 40,
-    height: 4,
-    backgroundColor: '#BDBDBD',
-    borderRadius: 2,
-    marginBottom: 5,
-  },
-  dragText: {
-    fontSize: 12,
-    color: '#757575',
-    fontWeight: '600',
+  headerTitle: { fontSize: 16, fontWeight: 'bold', marginRight: 6 },
+  section: {
+    backgroundColor: lightThemeColor,
+    color: 'grey',
+    textTransform: 'capitalize',
   },
 });
-
-export default ExpandableCalendarComp;
