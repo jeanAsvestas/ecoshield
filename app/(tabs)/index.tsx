@@ -1,9 +1,5 @@
 import CalendarComponent from '@/components/calendar';
-import EditScreenInfo from '@/components/edit-screen-info';
-import { Center } from '@/components/ui/center';
-import { Divider } from '@/components/ui/divider';
-import { Heading } from '@/components/ui/heading';
-import { Text } from '@/components/ui/text';
+import JobList, { Job } from '@/components/job-list';
 import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 export default function HomeScreen() {
@@ -14,8 +10,15 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
-        <CalendarComponent weekView />
-        <Center>
+        <CalendarComponent />
+        <JobList
+          jobs={jobsList}
+          onInfoPress={(job) => console.log('Info pressed for job:', job)}
+          onSecondActionPress={(job) =>
+            console.log('Second action pressed for job:', job)
+          }
+        />
+        {/* <Center>
           <Heading className="font-bold text-2xl">Expo- Tab 2</Heading>
           <Divider className="my-[30px] w-[80%]" />
           <Text className="p-4">
@@ -46,7 +49,7 @@ export default function HomeScreen() {
             Example below to use gluestack-ui components.
           </Text>
           <EditScreenInfo path="app/(app)/(tabs)/tab2.tsx" />
-        </Center>
+        </Center> */}
       </ScrollView>
     </SafeAreaView>
     // <>
@@ -137,3 +140,42 @@ export default function HomeScreen() {
 //     position: 'absolute',
 //   },
 // });
+
+const jobsList: Job[] = [
+  {
+    id: '1',
+    description: 'Απεντόμωση σε εξωτερικό χώρο',
+    status: 'Ongoing',
+    type: 'Home',
+    price: 50,
+    details:
+      'Η απεντόμωση θα γίνει σε εξωτερικό χώρο, με χρήση οικολογικών προϊόντων. Η διάρκεια της εργασίας εκτιμάται σε 2 ώρες.',
+  },
+  {
+    id: '2',
+    description: 'Καθαρισμός καναπέ',
+    status: 'Finished',
+    type: 'Professional',
+    price: 30,
+    details:
+      'Ο καθαρισμός του καναπέ θα γίνει με ειδικά καθαριστικά προϊόντα και θα περιλαμβάνει την αφαίρεση λεκέδων και τη φρεσκάρισμα του υφάσματος.',
+  },
+  {
+    id: '3',
+    description: 'Καθαρισμός καναπέ',
+    status: 'Finished',
+    type: 'Professional',
+    price: 30,
+    details:
+      'Ο καθαρισμός του καναπέ θα γίνει με ειδικά καθαριστικά προϊόντα και θα περιλαμβάνει την αφαίρεση λεκέδων και τη φρεσκάρισμα του υφάσματος.',
+  },
+  {
+    id: '4',
+    description: 'Καθαρισμός καναπέ',
+    status: 'Finished',
+    type: 'Professional',
+    price: 30,
+    details:
+      'Ο καθαρισμός του καναπέ θα γίνει με ειδικά καθαριστικά προϊόντα και θα περιλαμβάνει την αφαίρεση λεκέδων και τη φρεσκάρισμα του υφάσματος.',
+  },
+];
