@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Modal,
@@ -11,7 +12,7 @@ import {
 export interface Job {
   id: string;
   description: string;
-  status: 'Ongoing' | 'Finished' | 'Cancelled';
+  status: 'Σε εκκρεμότητα' | 'Ολοκληρωμένη' | 'Ακυρωμένη';
   type: 'Home' | 'Professional';
   price?: number;
   details?: string;
@@ -34,11 +35,11 @@ const JobListItem = ({
 }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending':
+      case 'Ακυρωμένη':
         return '#FF9800';
-      case 'in-progress':
+      case 'Σε εκκρεμότητα':
         return '#2196F3';
-      case 'completed':
+      case 'Ολοκληρωμένη':
         return '#4CAF50';
       default:
         return '#757575';
@@ -74,13 +75,13 @@ const JobListItem = ({
           style={styles.infoButton}
           onPress={() => onInfoPress(job)}
         >
-          <Text style={styles.buttonText}>Info</Text>
+          <Ionicons name="information-circle" size={30} color="#6B7280" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionButton}
           onPress={() => onSecondActionPress(job)}
         >
-          <Text style={styles.buttonText}>Action</Text>
+          <Ionicons name="flash" size={30} color="#6B7280" />
         </TouchableOpacity>
       </View>
     </View>
@@ -92,17 +93,38 @@ const JobList: React.FC<Props> = ({
   onInfoPress = () => {},
   onSecondActionPress = () => {},
 }) => {
+  const [jobData, setJobData] = useState<Job[]>(jobs);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalMode, setModalMode] = useState<'info' | 'action'>('info');
+
+  useEffect(() => {
+    setJobData(jobs);
+  }, [jobs]);
 
   const handleInfoPress = (job: Job) => {
     setSelectedJob(job);
+    setModalMode('info');
     setModalVisible(true);
     onInfoPress(job);
   };
 
   const handleSecondActionPress = (job: Job) => {
+    setSelectedJob(job);
+    setModalMode('action');
+    setModalVisible(true);
     onSecondActionPress(job);
+  };
+
+  const handleStatusChange = (status: Job['status']) => {
+    if (!selectedJob) {
+      return;
+    }
+
+    setJobData((prev) =>
+      prev.map((job) => (job.id === selectedJob.id ? { ...job, status } : job))
+    );
+    setSelectedJob({ ...selectedJob, status });
   };
 
   return (
@@ -112,7 +134,7 @@ const JobList: React.FC<Props> = ({
       </View>
 
       <FlatList
-        data={jobs}
+        data={jobData}
         renderItem={({ item }) => (
           <JobListItem
             job={item}
@@ -134,7 +156,9 @@ const JobList: React.FC<Props> = ({
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Job Details</Text>
+              <Text style={styles.modalTitle}>
+                {modalMode === 'action' ? 'Update Status' : 'Job Details'}
+              </Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <Text style={styles.closeButton}>✕</Text>
               </TouchableOpacity>
@@ -143,14 +167,14 @@ const JobList: React.FC<Props> = ({
             {selectedJob && (
               <View style={styles.modalBody}>
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Description:</Text>
+                  <Text style={styles.detailLabel}>Περιγραφή:</Text>
                   <Text style={styles.detailValue}>
                     {selectedJob.description}
                   </Text>
                 </View>
 
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Status:</Text>
+                  <Text style={styles.detailLabel}>Κατάσταση:</Text>
                   <Text style={styles.detailValue}>
                     {selectedJob.status.replace('-', ' ').toUpperCase()}
                   </Text>
@@ -178,6 +202,38 @@ const JobList: React.FC<Props> = ({
                     <Text style={styles.detailValue}>
                       {selectedJob.details}
                     </Text>
+                  </View>
+                )}
+
+                {modalMode === 'action' && (
+                  <View style={styles.statusActions}>
+                    <Text style={styles.detailLabel}>Αλλαγή κατάστασης:</Text>
+                    <View style={styles.statusButtons}>
+                      {(
+                        ['Σε εκκρεμότητα', 'Ολοκληρωμένη', 'Ακυρωμένη'] as const
+                      ).map((status) => {
+                        const isActive = selectedJob.status === status;
+                        return (
+                          <TouchableOpacity
+                            key={status}
+                            style={[
+                              styles.statusButton,
+                              isActive ? styles.statusButtonActive : null,
+                            ]}
+                            onPress={() => handleStatusChange(status)}
+                          >
+                            <Text
+                              style={[
+                                styles.statusButtonText,
+                                isActive ? styles.statusButtonTextActive : null,
+                              ]}
+                            >
+                              {status}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
                   </View>
                 )}
               </View>
@@ -264,20 +320,14 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end',
     gap: 8,
   },
   infoButton: {
-    flex: 1,
-    paddingVertical: 10,
-    backgroundColor: '#2196F3',
-    borderRadius: 8,
     alignItems: 'center',
   },
   actionButton: {
-    flex: 1,
-    paddingVertical: 10,
-    backgroundColor: '#FF9800',
-    borderRadius: 8,
     alignItems: 'center',
   },
   buttonText: {
@@ -331,6 +381,34 @@ const styles = StyleSheet.create({
   detailValue: {
     fontSize: 16,
     color: '#333',
+  },
+  statusActions: {
+    marginTop: 8,
+    gap: 10,
+  },
+  statusButtons: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  statusButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+  },
+  statusButtonActive: {
+    backgroundColor: '#2196F3',
+    borderColor: '#2196F3',
+  },
+  statusButtonText: {
+    color: '#374151',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  statusButtonTextActive: {
+    color: '#fff',
   },
   closeModalButton: {
     backgroundColor: '#2196F3',

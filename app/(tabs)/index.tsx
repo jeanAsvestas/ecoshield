@@ -145,7 +145,7 @@ const jobsList: Job[] = [
   {
     id: '1',
     description: 'Απεντόμωση σε εξωτερικό χώρο',
-    status: 'Ongoing',
+    status: 'Ολοκληρωμένη',
     type: 'Home',
     price: 50,
     details:
@@ -154,7 +154,7 @@ const jobsList: Job[] = [
   {
     id: '2',
     description: 'Καθαρισμός καναπέ',
-    status: 'Finished',
+    status: 'Ακυρωμένη',
     type: 'Professional',
     price: 30,
     details:
@@ -163,7 +163,7 @@ const jobsList: Job[] = [
   {
     id: '3',
     description: 'Καθαρισμός καναπέ',
-    status: 'Finished',
+    status: 'Σε εκκρεμότητα',
     type: 'Professional',
     price: 30,
     details:
@@ -172,7 +172,7 @@ const jobsList: Job[] = [
   {
     id: '4',
     description: 'Καθαρισμός καναπέ',
-    status: 'Finished',
+    status: 'Σε εκκρεμότητα',
     type: 'Professional',
     price: 30,
     details:
