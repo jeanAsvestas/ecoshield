@@ -4,8 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { theme } from '@/constants/theme';
 
 type NotificationItem = {
   id: string;
@@ -62,9 +61,6 @@ const notifications: NotificationItem[] = [
 ];
 
 export default function NotificationsScreen() {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -73,7 +69,9 @@ export default function NotificationsScreen() {
             <ThemedText type="title">Notifications</ThemedText>
             <ThemedText>Updates for your active jobs and route</ThemedText>
           </View>
-          <ThemedView style={[styles.badge, { backgroundColor: colors.tint }]}>
+          <ThemedView
+            style={[styles.badge, { backgroundColor: theme.colors.primary }]}
+          >
             <ThemedText style={styles.badgeText}>2 new</ThemedText>
           </ThemedView>
         </ThemedView>
@@ -84,7 +82,7 @@ export default function NotificationsScreen() {
             style={[
               styles.card,
               item.unread ? styles.cardUnread : null,
-              { borderColor: colors.tint },
+              { borderColor: theme.colors.primary },
             ]}
           >
             <View style={styles.cardHeader}>
@@ -92,7 +90,7 @@ export default function NotificationsScreen() {
               <ThemedView
                 style={[
                   styles.pill,
-                  { backgroundColor: severityColor(item.severity, colors) },
+                  { backgroundColor: severityColor(item.severity) },
                 ]}
               >
                 <ThemedText style={styles.pillText}>{item.severity}</ThemedText>
@@ -107,17 +105,14 @@ export default function NotificationsScreen() {
   );
 }
 
-function severityColor(
-  level: NotificationItem['severity'],
-  colors: typeof Colors.light
-) {
+function severityColor(level: NotificationItem['severity']) {
   if (level === 'urgent') {
-    return '#D64545';
+    return theme.colors.errorDark;
   }
   if (level === 'success') {
-    return '#2E7D32';
+    return theme.colors.successDark;
   }
-  return colors.tint;
+  return theme.colors.info;
 }
 
 const styles = StyleSheet.create({
@@ -125,8 +120,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 20,
-    gap: 16,
+    padding: theme.spacing.xl,
+    gap: theme.spacing.lg,
   },
   header: {
     flexDirection: 'row',
@@ -140,8 +135,8 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   badgeText: {
-    color: '#FFFFFF',
-    fontSize: 12,
+    color: theme.colors.textInverse,
+    fontSize: theme.fontSize.sm,
   },
   card: {
     padding: 16,
@@ -164,8 +159,8 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   pillText: {
-    color: '#FFFFFF',
-    fontSize: 11,
+    color: theme.colors.textInverse,
+    fontSize: theme.fontSize.xs,
     textTransform: 'uppercase',
   },
   meta: {

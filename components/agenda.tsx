@@ -1,4 +1,5 @@
 // import isEmpty from 'lodash/isEmpty';
+import { theme } from '@/constants/theme';
 import React, { useCallback } from 'react';
 import {
   Alert,
@@ -45,7 +46,11 @@ const AgendaItem = (props: ItemProps) => {
       </View>
       <Text style={styles.itemTitleText}>{item.title}</Text>
       <View style={styles.itemButtonContainer}>
-        <Button color={'grey'} title={'Info'} onPress={buttonPressed} />
+        <Button
+          color={theme.colors.icon}
+          title={'Info'}
+          onPress={buttonPressed}
+        />
       </View>
     </TouchableOpacity>
   );
@@ -55,40 +60,40 @@ export default React.memo(AgendaItem);
 
 const styles = StyleSheet.create({
   item: {
-    padding: 20,
-    backgroundColor: 'white',
+    padding: theme.spacing.xl,
+    backgroundColor: theme.colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: 'lightgrey',
+    borderBottomColor: theme.colors.borderLight,
     flexDirection: 'row',
   },
   itemHourText: {
-    color: 'black',
+    color: theme.colors.textPrimary,
   },
   itemDurationText: {
-    color: 'grey',
-    fontSize: 12,
-    marginTop: 4,
-    marginLeft: 4,
+    color: theme.colors.textSecondary,
+    fontSize: theme.fontSize.sm,
+    marginTop: theme.spacing.xs,
+    marginLeft: theme.spacing.xs,
   },
   itemTitleText: {
-    color: 'black',
-    marginLeft: 16,
-    fontWeight: 'bold',
-    fontSize: 16,
+    color: theme.colors.textPrimary,
+    marginLeft: theme.spacing.lg,
+    fontWeight: theme.fontWeight.bold,
+    fontSize: theme.fontSize.lg,
   },
   itemButtonContainer: {
     flex: 1,
     alignItems: 'flex-end',
   },
   emptyItem: {
-    paddingLeft: 20,
+    paddingLeft: theme.spacing.xl,
     height: 52,
     justifyContent: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: 'lightgrey',
+    borderBottomColor: theme.colors.borderLight,
   },
   emptyItemText: {
-    color: 'lightgrey',
-    fontSize: 14,
+    color: theme.colors.textMuted,
+    fontSize: theme.fontSize.md,
   },
 });

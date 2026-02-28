@@ -4,13 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { theme } from '@/constants/theme';
 
 export default function ProfileScreen() {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
-
   const handleLogout = () => {
     // TODO: wire up logout logic
     console.log('Logout pressed');
@@ -31,10 +27,7 @@ export default function ProfileScreen() {
           <ThemedText>Τεχνικός</ThemedText>
         </ThemedView>
 
-        <Pressable
-          onPress={handleLogout}
-          style={[styles.logoutButton, { backgroundColor: colors.tint }]}
-        >
+        <Pressable onPress={handleLogout} style={styles.logoutButton}>
           <ThemedText style={styles.logoutText}>Αποσύνδεση</ThemedText>
         </Pressable>
       </ThemedView>
@@ -48,24 +41,25 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 20,
-    gap: 16,
+    padding: theme.spacing.xl,
+    gap: theme.spacing.lg,
   },
   card: {
-    padding: 16,
-    borderRadius: 12,
-    gap: 8,
+    padding: theme.spacing.lg,
+    borderRadius: theme.borderRadius.md,
+    gap: theme.spacing.sm,
   },
   sectionTitle: {
-    marginTop: 12,
+    marginTop: theme.spacing.md,
   },
   logoutButton: {
-    marginTop: 8,
-    paddingVertical: 12,
-    borderRadius: 10,
+    marginTop: theme.spacing.sm,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.sm,
     alignItems: 'center',
+    backgroundColor: theme.colors.primary,
   },
   logoutText: {
-    color: '#000000',
+    color: theme.colors.textInverse,
   },
 });

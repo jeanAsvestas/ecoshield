@@ -1,3 +1,4 @@
+import { theme } from '@/constants/theme';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { useEffect, useState } from 'react';
 import {
@@ -36,13 +37,13 @@ const JobListItem = ({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Ακυρωμένη':
-        return '#FF9800';
+        return theme.colors.statusCancelled;
       case 'Σε εκκρεμότητα':
-        return '#2196F3';
+        return theme.colors.statusPending;
       case 'Ολοκληρωμένη':
-        return '#4CAF50';
+        return theme.colors.statusCompleted;
       default:
-        return '#757575';
+        return theme.colors.statusDefault;
     }
   };
 
@@ -75,13 +76,17 @@ const JobListItem = ({
           style={styles.infoButton}
           onPress={() => onInfoPress(job)}
         >
-          <Ionicons name="information-circle" size={30} color="#6B7280" />
+          <Ionicons
+            name="information-circle"
+            size={30}
+            color={theme.colors.icon}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionButton}
           onPress={() => onSecondActionPress(job)}
         >
-          <Ionicons name="flash" size={30} color="#6B7280" />
+          <Ionicons name="flash" size={30} color={theme.colors.icon} />
         </TouchableOpacity>
       </View>
     </View>
@@ -255,33 +260,29 @@ const JobList: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.colors.surfaceSecondary,
   },
   header: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#fff',
+    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.lg,
+    backgroundColor: theme.colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: theme.colors.border,
   },
   headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: theme.fontSize['3xl'],
+    fontWeight: theme.fontWeight.bold,
+    color: theme.colors.textPrimary,
   },
   listContent: {
-    padding: 12,
+    padding: theme.spacing.md,
   },
   jobItem: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
+    ...theme.shadow.sm,
   },
   jobContent: {
     marginBottom: 12,
@@ -293,30 +294,30 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   jobTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontSize: theme.fontSize.lg,
+    fontWeight: theme.fontWeight.semibold,
+    color: theme.colors.textPrimary,
     flex: 1,
   },
   jobPrice: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#4CAF50',
-    marginLeft: 8,
+    fontSize: theme.fontSize.lg,
+    fontWeight: theme.fontWeight.bold,
+    color: theme.colors.success,
+    marginLeft: theme.spacing.sm,
   },
   statusContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   statusBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 16,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.xs,
+    borderRadius: theme.borderRadius.lg,
   },
   statusText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
+    color: theme.colors.textInverse,
+    fontSize: theme.fontSize.sm,
+    fontWeight: theme.fontWeight.semibold,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -331,56 +332,56 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
+    color: theme.colors.textInverse,
+    fontSize: theme.fontSize.md,
+    fontWeight: theme.fontWeight.semibold,
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: theme.colors.overlay,
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    backgroundColor: theme.colors.surface,
+    borderTopLeftRadius: theme.borderRadius.xl,
+    borderTopRightRadius: theme.borderRadius.xl,
+    paddingHorizontal: theme.spacing.xl,
+    paddingBottom: theme.spacing.xl,
     maxHeight: '80%',
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: theme.spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: theme.colors.border,
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: theme.fontSize['2xl'],
+    fontWeight: theme.fontWeight.bold,
+    color: theme.colors.textPrimary,
   },
   closeButton: {
-    fontSize: 24,
-    color: '#999',
-    fontWeight: 'bold',
+    fontSize: theme.fontSize['3xl'],
+    color: theme.colors.textMuted,
+    fontWeight: theme.fontWeight.bold,
   },
   modalBody: {
-    paddingVertical: 16,
+    paddingVertical: theme.spacing.lg,
   },
   detailRow: {
-    marginBottom: 16,
+    marginBottom: theme.spacing.lg,
   },
   detailLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-    marginBottom: 4,
+    fontSize: theme.fontSize.md,
+    fontWeight: theme.fontWeight.semibold,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.xs,
   },
   detailValue: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: theme.fontSize.lg,
+    color: theme.colors.textPrimary,
   },
   statusActions: {
     marginTop: 8,
@@ -392,35 +393,35 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   statusButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 16,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: theme.colors.border,
   },
   statusButtonActive: {
-    backgroundColor: '#2196F3',
-    borderColor: '#2196F3',
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
   },
   statusButtonText: {
-    color: '#374151',
-    fontSize: 12,
-    fontWeight: '600',
+    color: theme.colors.textPrimary,
+    fontSize: theme.fontSize.sm,
+    fontWeight: theme.fontWeight.semibold,
   },
   statusButtonTextActive: {
-    color: '#fff',
+    color: theme.colors.textInverse,
   },
   closeModalButton: {
-    backgroundColor: '#2196F3',
-    paddingVertical: 12,
-    borderRadius: 8,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.sm,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: theme.spacing.sm,
   },
   closeModalButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: theme.colors.textInverse,
+    fontSize: theme.fontSize.lg,
+    fontWeight: theme.fontWeight.semibold,
   },
 });
 
