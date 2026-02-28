@@ -70,11 +70,13 @@ export default function NotificationsScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <ThemedView style={styles.header}>
           <View>
-            <ThemedText type="title">Notifications</ThemedText>
-            <ThemedText>Updates for your active jobs and route</ThemedText>
+            <ThemedText type="title">Ειδοποιήσεις</ThemedText>
+            <ThemedText className="break-words" style={{ opacity: 0.7 }}>
+              Ενημερώσεις για τις ενεργές εργασίες
+            </ThemedText>
           </View>
           <ThemedView style={[styles.badge, { backgroundColor: colors.tint }]}>
-            <ThemedText style={styles.badgeText}>2 new</ThemedText>
+            <ThemedText style={styles.badgeText}>2 νέες</ThemedText>
           </ThemedView>
         </ThemedView>
 
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   badgeText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 12,
   },
   card: {
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   pillText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 11,
     textTransform: 'uppercase',
   },

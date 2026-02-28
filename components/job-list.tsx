@@ -130,7 +130,7 @@ const JobList: React.FC<Props> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>My Jobs</Text>
+        <Text style={styles.headerText}>Οι Εργασίες μου</Text>
       </View>
 
       <FlatList
