@@ -1,4 +1,5 @@
 import { theme } from '@/constants/theme';
+import { isValidKey } from '@/utils/helper-fucntions';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { useEffect, useState } from 'react';
 import {
@@ -10,12 +11,19 @@ import {
   View,
 } from 'react-native';
 
+const JOB_TYPES = {
+  Home: 'Οικιακή',
+  Professional: 'Επαγγελματική',
+};
+
 export interface Job {
   id: string;
   description: string;
   status: 'Σε εκκρεμότητα' | 'Ολοκληρωμένη' | 'Ακυρωμένη';
   type: 'Home' | 'Professional';
   price?: number;
+  time?: string; // e.g., "14:30" or "2:30 PM"
+  address?: string;
   details?: string;
 }
 
@@ -51,11 +59,44 @@ const JobListItem = ({
     <View style={styles.jobItem}>
       <View style={styles.jobContent}>
         <View style={styles.jobHeader}>
-          <Text style={styles.jobTitle}>{job.description}</Text>
+          <View style={styles.titleWithType}>
+            <Ionicons
+              name={job.type === 'Home' ? 'home' : 'briefcase'}
+              size={20}
+              color={theme.colors.icon}
+              style={styles.typeIcon}
+            />
+            <Text style={styles.jobTitle}>{job.description}</Text>
+          </View>
           {job.type === 'Home' && job.price !== undefined && (
             <Text style={styles.jobPrice}>€{job.price.toFixed(2)}</Text>
           )}
         </View>
+
+        {(job.time || job.address) && (
+          <View style={styles.jobMeta}>
+            {job.time && (
+              <Text style={styles.jobMetaText}>
+                <Ionicons
+                  name="time"
+                  size={14}
+                  color={theme.colors.textSecondary}
+                />{' '}
+                {job.time}
+              </Text>
+            )}
+            {job.address && (
+              <Text style={styles.jobMetaText} numberOfLines={1}>
+                <Ionicons
+                  name="location"
+                  size={14}
+                  color={theme.colors.textSecondary}
+                />{' '}
+                {job.address}
+              </Text>
+            )}
+          </View>
+        )}
 
         <View style={styles.statusContainer}>
           <View
@@ -162,7 +203,9 @@ const JobList: React.FC<Props> = ({
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>
-                {modalMode === 'action' ? 'Update Status' : 'Job Details'}
+                {modalMode === 'action'
+                  ? 'Ενημέρωση Κατάστασης'
+                  : 'Λεπτομέρειες Εργασίας'}
               </Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
                 <Text style={styles.closeButton}>✕</Text>
@@ -186,20 +229,36 @@ const JobList: React.FC<Props> = ({
                 </View>
 
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Type:</Text>
+                  <Text style={styles.detailLabel}>Τύπος εργασίας:</Text>
                   <Text style={styles.detailValue}>
-                    {selectedJob.type.toUpperCase()}
+                    {isValidKey(selectedJob.type, JOB_TYPES)
+                      ? JOB_TYPES[selectedJob.type]
+                      : selectedJob.type}
                   </Text>
                 </View>
 
                 {selectedJob.type === 'Home' && selectedJob.price && (
                   <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Price:</Text>
+                    <Text style={styles.detailLabel}>Κόστος:</Text>
                     <Text style={styles.detailValue}>
                       €{selectedJob.price.toFixed(2)}
                     </Text>
                   </View>
                 )}
+
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Διεύθυνση:</Text>
+                  <Text style={styles.detailValue}>
+                    {selectedJob.address || 'N/A'}
+                  </Text>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Ώρα:</Text>
+                  <Text style={styles.detailValue}>
+                    {selectedJob.time || 'N/A'}
+                  </Text>
+                </View>
 
                 {selectedJob.details && (
                   <View style={styles.detailRow}>
@@ -305,9 +364,27 @@ const styles = StyleSheet.create({
     color: theme.colors.success,
     marginLeft: theme.spacing.sm,
   },
+  titleWithType: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    flex: 1,
+  },
+  typeIcon: {
+    flexShrink: 0,
+  },
+  jobMeta: {
+    marginTop: theme.spacing.sm,
+    gap: theme.spacing.xs,
+  },
+  jobMetaText: {
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textSecondary,
+  },
   statusContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: theme.spacing.md,
   },
   statusBadge: {
     paddingHorizontal: theme.spacing.md,

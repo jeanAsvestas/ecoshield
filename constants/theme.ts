@@ -13,14 +13,14 @@ import { Platform } from 'react-native';
 
 // ─── Color Palette ──────────────────────────────────────────────────────────
 export const palette = {
-  // Facebook blue ramp
-  blue50: '#E7F3FF',
-  blue100: '#C3DAFE',
-  blue200: '#90B8F8',
-  blue400: '#4599F7',
-  blue500: '#1877F2', // primary
-  blue600: '#1565C0',
-  blue700: '#0F4C99',
+  // EcoShield green ramp
+  green50: '#EAF5E6',
+  green100: '#C8E6C0',
+  green200: '#A5D69A',
+  green400: '#7DC46E',
+  green500: '#67B154', // primary
+  green600: '#2B5C2E', // primary dark
+  green700: '#1E4021',
 
   // Neutrals (Facebook-style)
   white: '#FFFFFF',
@@ -37,12 +37,13 @@ export const palette = {
   black: '#000000',
 
   // Semantic status
-  green500: '#42B72A',
-  green700: '#2E7D32',
+  statusGreen500: '#42B72A',
+  statusGreen700: '#2E7D32',
   orange500: '#F7B928',
-  orange600: '#FF9800',
+  orange600: '#e09900',
   red500: '#FA3E3E',
   red600: '#D64545',
+  blue500: '#1877F2',
 } as const;
 
 // ─── Semantic Theme Tokens ──────────────────────────────────────────────────
@@ -57,16 +58,16 @@ export const theme = {
     surfaceSecondary: palette.gray50,
 
     // ── Brand / Primary ─────────────────────────────────────────────────
-    primary: palette.blue500,
-    primaryLight: palette.blue50,
-    primaryDark: palette.blue600,
+    primary: palette.green500,
+    primaryLight: palette.green50,
+    primaryDark: palette.green600,
 
     // ── Text ────────────────────────────────────────────────────────────
     textPrimary: palette.gray900,
     textSecondary: palette.gray500,
     textMuted: palette.gray400,
     textInverse: palette.white,
-    textLink: palette.blue500,
+    textLink: palette.green500,
 
     // ── Borders / Dividers ──────────────────────────────────────────────
     border: palette.gray200,
@@ -74,16 +75,16 @@ export const theme = {
 
     // ── Icons ───────────────────────────────────────────────────────────
     icon: palette.gray500,
-    iconActive: palette.blue500,
+    iconActive: palette.green500,
 
     // ── Interactive states ──────────────────────────────────────────────
-    selected: palette.blue500,
+    selected: palette.green500,
     selectedText: palette.white,
     pressed: palette.gray100,
     disabled: palette.gray300,
 
     // ── Tab bar ─────────────────────────────────────────────────────────
-    tabActive: palette.blue500,
+    tabActive: palette.green500,
     tabInactive: palette.gray400,
 
     // ── Shadows ─────────────────────────────────────────────────────────
@@ -93,25 +94,25 @@ export const theme = {
     overlay: 'rgba(0, 0, 0, 0.5)',
 
     // ── Semantic / Status ───────────────────────────────────────────────
-    success: palette.green500,
-    successDark: palette.green700,
+    success: palette.statusGreen500,
+    successDark: palette.statusGreen700,
     warning: palette.orange500,
     warningDark: palette.orange600,
     error: palette.red500,
     errorDark: palette.red600,
-    info: palette.blue500,
+    info: palette.green500,
     pending: palette.blue500,
 
     // ── Calendar-specific ───────────────────────────────────────────────
-    calendarActiveWeek: palette.blue50,
+    calendarActiveWeek: palette.green50,
     calendarOtherMonth: palette.gray300,
     calendarHandle: palette.gray200,
-    calendarToday: palette.blue500,
-    calendarTodayText: palette.blue500,
+    calendarToday: palette.green500,
+    calendarTodayText: palette.green500,
 
     // ── Status badge colors (job statuses) ──────────────────────────────
     statusPending: palette.blue500,
-    statusCompleted: palette.green500,
+    statusCompleted: palette.statusGreen500,
     statusCancelled: palette.orange600,
     statusDefault: palette.gray500,
   },
