@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -212,96 +213,104 @@ const JobList: React.FC<Props> = ({
               </TouchableOpacity>
             </View>
 
-            {selectedJob && (
-              <View style={styles.modalBody}>
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Περιγραφή:</Text>
-                  <Text style={styles.detailValue}>
-                    {selectedJob.description}
-                  </Text>
-                </View>
-
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Κατάσταση:</Text>
-                  <Text style={styles.detailValue}>
-                    {selectedJob.status.replace('-', ' ').toUpperCase()}
-                  </Text>
-                </View>
-
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Τύπος εργασίας:</Text>
-                  <Text style={styles.detailValue}>
-                    {isValidKey(selectedJob.type, JOB_TYPES)
-                      ? JOB_TYPES[selectedJob.type]
-                      : selectedJob.type}
-                  </Text>
-                </View>
-
-                {selectedJob.type === 'Home' && selectedJob.price && (
+            <ScrollView style={styles.scrollableContent}>
+              {selectedJob && (
+                <View style={styles.modalBody}>
                   <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Κόστος:</Text>
+                    <Text style={styles.detailLabel}>Περιγραφή:</Text>
                     <Text style={styles.detailValue}>
-                      €{selectedJob.price.toFixed(2)}
+                      {selectedJob.description}
                     </Text>
                   </View>
-                )}
 
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Διεύθυνση:</Text>
-                  <Text style={styles.detailValue}>
-                    {selectedJob.address || 'N/A'}
-                  </Text>
-                </View>
-
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Ώρα:</Text>
-                  <Text style={styles.detailValue}>
-                    {selectedJob.time || 'N/A'}
-                  </Text>
-                </View>
-
-                {selectedJob.details && (
                   <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Details:</Text>
+                    <Text style={styles.detailLabel}>Κατάσταση:</Text>
                     <Text style={styles.detailValue}>
-                      {selectedJob.details}
+                      {selectedJob.status.replace('-', ' ').toUpperCase()}
                     </Text>
                   </View>
-                )}
 
-                {modalMode === 'action' && (
-                  <View style={styles.statusActions}>
-                    <Text style={styles.detailLabel}>Αλλαγή κατάστασης:</Text>
-                    <View style={styles.statusButtons}>
-                      {(
-                        ['Σε εκκρεμότητα', 'Ολοκληρωμένη', 'Ακυρωμένη'] as const
-                      ).map((status) => {
-                        const isActive = selectedJob.status === status;
-                        return (
-                          <TouchableOpacity
-                            key={status}
-                            style={[
-                              styles.statusButton,
-                              isActive ? styles.statusButtonActive : null,
-                            ]}
-                            onPress={() => handleStatusChange(status)}
-                          >
-                            <Text
-                              style={[
-                                styles.statusButtonText,
-                                isActive ? styles.statusButtonTextActive : null,
-                              ]}
-                            >
-                              {status}
-                            </Text>
-                          </TouchableOpacity>
-                        );
-                      })}
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Τύπος εργασίας:</Text>
+                    <Text style={styles.detailValue}>
+                      {isValidKey(selectedJob.type, JOB_TYPES)
+                        ? JOB_TYPES[selectedJob.type]
+                        : selectedJob.type}
+                    </Text>
+                  </View>
+
+                  {selectedJob.type === 'Home' && selectedJob.price && (
+                    <View style={styles.detailRow}>
+                      <Text style={styles.detailLabel}>Κόστος:</Text>
+                      <Text style={styles.detailValue}>
+                        €{selectedJob.price.toFixed(2)}
+                      </Text>
                     </View>
+                  )}
+
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Διεύθυνση:</Text>
+                    <Text style={styles.detailValue}>
+                      {selectedJob.address || 'N/A'}
+                    </Text>
                   </View>
-                )}
-              </View>
-            )}
+
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Ώρα:</Text>
+                    <Text style={styles.detailValue}>
+                      {selectedJob.time || 'N/A'}
+                    </Text>
+                  </View>
+
+                  {selectedJob.details && (
+                    <View style={styles.detailRow}>
+                      <Text style={styles.detailLabel}>Details:</Text>
+                      <Text style={styles.detailValue}>
+                        {selectedJob.details}
+                      </Text>
+                    </View>
+                  )}
+
+                  {modalMode === 'action' && (
+                    <View style={styles.statusActions}>
+                      <Text style={styles.detailLabel}>Αλλαγή κατάστασης:</Text>
+                      <View style={styles.statusButtons}>
+                        {(
+                          [
+                            'Σε εκκρεμότητα',
+                            'Ολοκληρωμένη',
+                            'Ακυρωμένη',
+                          ] as const
+                        ).map((status) => {
+                          const isActive = selectedJob.status === status;
+                          return (
+                            <TouchableOpacity
+                              key={status}
+                              style={[
+                                styles.statusButton,
+                                isActive ? styles.statusButtonActive : null,
+                              ]}
+                              onPress={() => handleStatusChange(status)}
+                            >
+                              <Text
+                                style={[
+                                  styles.statusButtonText,
+                                  isActive
+                                    ? styles.statusButtonTextActive
+                                    : null,
+                                ]}
+                              >
+                                {status}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        })}
+                      </View>
+                    </View>
+                  )}
+                </View>
+              )}
+            </ScrollView>
 
             <TouchableOpacity
               style={styles.closeModalButton}
@@ -425,6 +434,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.xl,
     paddingBottom: theme.spacing.xl,
     maxHeight: '80%',
+    flex: 1,
+    flexDirection: 'column',
+  },
+  scrollableContent: {
+    flex: 1,
   },
   modalHeader: {
     flexDirection: 'row',

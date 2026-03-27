@@ -65,15 +65,20 @@ export default function NotificationsScreen() {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <ThemedView style={styles.header}>
-          <View>
-            <ThemedText type="title">Notifications</ThemedText>
-            <ThemedText>Updates for your active jobs and route</ThemedText>
+          <View style={styles.titleRow}>
+            <ThemedText type="title">Ειδοποιήσεις</ThemedText>
+            <ThemedView
+              style={[
+                styles.badge,
+                { backgroundColor: theme.colors.primary, flexShrink: 0 },
+              ]}
+            >
+              <ThemedText style={styles.badgeText}>2 new</ThemedText>
+            </ThemedView>
           </View>
-          <ThemedView
-            style={[styles.badge, { backgroundColor: theme.colors.primary }]}
-          >
-            <ThemedText style={styles.badgeText}>2 new</ThemedText>
-          </ThemedView>
+          <ThemedText>
+            Ενημερώσεις για τις ενεργές σας εργασίες και διαδρομές
+          </ThemedText>
         </ThemedView>
 
         {notifications.map((item) => (
@@ -86,10 +91,13 @@ export default function NotificationsScreen() {
             ]}
           >
             <View style={styles.cardHeader}>
-              <ThemedText type="defaultSemiBold">{item.title}</ThemedText>
+              <View style={{ flex: 1 }}>
+                <ThemedText type="defaultSemiBold">{item.title}</ThemedText>
+              </View>
               <ThemedView
                 style={[
                   styles.pill,
+                  styles.pillShrink,
                   { backgroundColor: severityColor(item.severity) },
                 ]}
               >
@@ -124,6 +132,10 @@ const styles = StyleSheet.create({
     gap: theme.spacing.lg,
   },
   header: {
+    flexDirection: 'column',
+    gap: 8,
+  },
+  titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -157,6 +169,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
+  },
+  pillShrink: {
+    flexShrink: 0,
   },
   pillText: {
     color: theme.colors.textInverse,

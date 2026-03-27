@@ -1,5 +1,4 @@
 import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
 import { theme } from '@/constants/theme';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -36,7 +35,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
@@ -44,7 +43,7 @@ export default function TabLayout() {
             <IconSymbol size={28} name="paperplane.fill" color={color} />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="profile"
         options={{

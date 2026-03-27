@@ -1,4 +1,5 @@
 import { theme } from '@/constants/theme';
+import { isValidKey } from '@/utils/helper-fucntions';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -41,7 +42,31 @@ const MONTH_NAMES = [
   'December',
 ];
 
+const MONTH_NAMES_GR = {
+  January: 'Ιανουάριος',
+  February: 'Φεβρουάριος',
+  March: 'Μάρτιος',
+  April: 'Απρίλιος',
+  May: 'Μάιος',
+  June: 'Ιούνιος',
+  July: 'Ιούλιος',
+  August: 'Αύγουστος',
+  September: 'Σεπτέμβριος',
+  October: 'Οκτώβριος',
+  November: 'Νοέμβριος',
+  December: 'Δεκέμβριος',
+};
+
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const DAY_LABELS_GR = {
+  Mon: 'Δε',
+  Tue: 'Τρ',
+  Wed: 'Τε',
+  Thu: 'Πε',
+  Fri: 'Πα',
+  Sat: 'Σα',
+  Sun: 'Κυ',
+};
 const ROW_HEIGHT = 44;
 const TIMING_CONFIG = { duration: 250, easing: Easing.out(Easing.cubic) };
 
@@ -329,7 +354,10 @@ export default function CalendarComponent({
         </Pressable>
 
         <Text style={styles.monthTitle}>
-          {MONTH_NAMES[currentMonth]} {currentYear}
+          {isValidKey(MONTH_NAMES[currentMonth], MONTH_NAMES_GR)
+            ? MONTH_NAMES_GR[MONTH_NAMES[currentMonth]]
+            : MONTH_NAMES[currentMonth]}{' '}
+          {currentYear}
         </Text>
 
         <Pressable onPress={goToNextMonth} style={styles.navBtn} hitSlop={12}>
@@ -341,7 +369,9 @@ export default function CalendarComponent({
       <View style={styles.dayLabelsRow}>
         {DAY_LABELS.map((label) => (
           <View key={label} style={styles.dayLabelCell}>
-            <Text style={styles.dayLabelText}>{label}</Text>
+            <Text style={styles.dayLabelText}>
+              {isValidKey(label, DAY_LABELS_GR) ? DAY_LABELS_GR[label] : label}
+            </Text>
           </View>
         ))}
       </View>
