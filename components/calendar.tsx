@@ -1,5 +1,5 @@
 import { theme } from '@/constants/theme';
-import { isValidKey } from '@/utils/helper-fucntions';
+import { isValidKey } from '@/utils/helper-functions';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';

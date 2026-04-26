@@ -1,9 +1,9 @@
 import { theme } from '@/constants/theme';
-import { isValidKey } from '@/utils/helper-fucntions';
+import { isValidKey } from '@/utils/helper-functions';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { FlashList } from '@shopify/flash-list';
 import React, { useEffect, useState } from 'react';
 import {
-  FlatList,
   Modal,
   ScrollView,
   StyleSheet,
@@ -180,7 +180,7 @@ const JobList: React.FC<Props> = ({
         <Text style={styles.headerText}>My Jobs</Text>
       </View>
 
-      <FlatList
+      <FlashList
         data={jobData}
         renderItem={({ item }) => (
           <JobListItem
