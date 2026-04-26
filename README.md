@@ -1,10 +1,17 @@
-# Welcome to Ecoshield
+# EcoShield Mobile
 
-## What is Ecoshield?
+📱 Internal mobile application for pest control service operations.
+
+## Overview
 
 EcoShield Mobile is the internal field operations application for pest control technicians. Designed for mobile use, it gives employees a clear, real-time view of their daily schedule and everything they need to get the job done — from appointment details and client information to job notes and service history.
 Technicians can browse their assigned appointments day by day, navigate to past or upcoming dates to stay ahead of their workload, and mark jobs as completed directly from the field. Each appointment card surfaces the key details on the spot — location, service type, client contact info, and any special instructions — so there's no need to call back to the office.
+The app also provides notifications for updates and alerts, ensuring efficient communication and workflow.
 Built to support a fast-moving team working outdoors, the app keeps things simple and reliable: the right information, at the right time, in the hands of the people who need it.
+
+## Usage
+
+Internal use only – restricted to authorized personnel.
 
 ## Get started
 
@@ -28,6 +35,9 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 ## Tech Stack
+
+- React Native
+- Firebase (Auth, Firestore, Messaging)
 
 ### Core Framework
 
